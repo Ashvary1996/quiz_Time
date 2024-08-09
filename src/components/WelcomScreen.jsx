@@ -1,44 +1,108 @@
 import React, { useState } from "react";
 import { uniqueTags as tags } from "../data/tags";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+
 function WelcomScreen() {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [selectedTags, setSelectedTags] = useState([]);
-  console.log(selectedTags);
-  const handleBegin = () => {
-    if (!name) alert("Name Required");
-    if (selectedTags.length < 10) alert("Add at Least 10 Tags");
-    if (selectedTags.length > 20) alert("You can add only up to  20 Tags");
+  // console.log(name);
+  // console.log(selectedTags);
 
-    console.log(name);
+  const handleBegin = () => {
+    if (!name) toast.error("Name is required");
+    else if (selectedTags.length < 10) toast.error("Add at least 10 tags");
+    else if (selectedTags.length > 20)
+      toast.error("You can add only up to 20 tags");
+    else
+      navigate("beginQuiz", {
+        state: {
+          name,
+          selectedTags,
+        },
+      });
   };
+
   const handleTag = (tag) => {
-    setSelectedTags((pT) => [...pT, tag]);
+    if (selectedTags.length >= 20) toast.warn("You can add only up to 20 tags");
+    else if (selectedTags.includes(tag)) {
+      toast.info(`${tag} already added`);
+    } else {
+      setSelectedTags((prevTags) => [...prevTags, tag]);
+    }
+  };
+
+  const handleSelectedTag = (tag) => {
+    const updatedTags = selectedTags.filter((elem) => elem !== tag);
+    setSelectedTags(updatedTags);
   };
 
   return (
-    <div>
-      <h1>Hi ! Welcome To Quiz App</h1>
+    <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
+      <ToastContainer />
 
-      <div>
+      <h1 className="text-3xl font-bold mb-6 text-center">
+        Hi! Welcome To Quiz App
+      </h1>
+
+      <div className="mb-6 w-full max-w-sm">
         <input
           onChange={(e) => setName(e.target.value)}
           type="text"
-          placeholder={"Write Your name"}
+          placeholder="Enter your name"
+          className="w-full p-3 border rounded shadow-sm "
         />
-        <button onClick={handleBegin}>Begin</button>
+        <button
+          onClick={handleBegin}
+          className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+        >
+          Begin
+        </button>
       </div>
 
-      <div>
-        <h2>Select Multiple Tag in Order To Begin THe Quiz. (Required 10) </h2>
-        <div>
-          {tags &&
-            tags.map((tag, i) => {
-              return (
-                <span key={i} onClick={() => handleTag(tag)}>
+      <div className="w-full max-w-lg">
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Select Multiple Tags to Begin the Quiz (min Required: 10)
+        </h2>
+
+        <fieldset className="mb-4 border-2 border-teal-500 p-4   rounded">
+          <legend className="text-left text-lg font-medium">
+            Selected Tags: {selectedTags.length}
+          </legend>
+          <div className="flex flex-wrap gap-2">
+            {selectedTags.map((tag, i) => (
+              <div key={i} className="flex items-center">
+                <span className="px-3 py-1 bg-green-500 text-white rounded-full">
                   {tag}
                 </span>
-              );
-            })}
+                <button
+                  className="ml-2 text-red-500 hover:text-red-600 transition"
+                  onClick={() => handleSelectedTag(tag)}
+                >
+                  &times;
+                </button>
+              </div>
+            ))}
+          </div>
+        </fieldset>
+
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag, i) => (
+            <button
+              key={i}
+              disabled={selectedTags.includes(tag)}
+              onClick={() => handleTag(tag)}
+              className={`px-3 py-1 rounded-full transition ${
+                selectedTags.includes(tag)
+                  ? "cursor-not-allowed opacity-50 bg-gray-300"
+                  : "cursor-pointer bg-gray-200 hover:bg-gray-300"
+              }`}
+            >
+              {tag}
+            </button>
+          ))}
         </div>
       </div>
     </div>
