@@ -8,7 +8,7 @@ import {
   setSelectedOptions,
 } from "../redux/quizeSlice";
 
-function TestScreen() {
+function QuizScreen() {
   const [timer, setTimer] = useState(30);
   const [showFullResult, setShowFullResult] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
@@ -48,7 +48,7 @@ function TestScreen() {
     }
   }, [timer, currentQuestionIndex, filteredQuestions.length]);
 
-  const currentQuestion = filteredQuestions[currentQuestionIndex];
+  let currentQuestion = filteredQuestions[currentQuestionIndex];
 
   const handleOptionSelect = (option) => {
     if (currentQuestion.type === "single") {
@@ -74,13 +74,11 @@ function TestScreen() {
     } else {
       const correctOptions = currentQuestion.correct;
 
-      
       const correctCount = selectedOptions.filter((option) =>
         correctOptions.includes(option)
       ).length;
       const incorrectCount = selectedOptions.length - correctCount;
 
-      
       const allCorrectSelected = correctOptions.every((option) =>
         selectedOptions.includes(option)
       );
@@ -105,8 +103,9 @@ function TestScreen() {
       dispatch(setCurrentQuestionIndex(currentQuestionIndex + 1));
       dispatch(setSelectedOptions([]));
       setTimer(30);
-    } else {
-      setTimer(0);
+    } 
+    if (currentQuestionIndex + 1 === 10 && timer === 0) {
+      currentQuestion = "";
     }
   };
 
@@ -199,4 +198,4 @@ function TestScreen() {
   );
 }
 
-export default TestScreen;
+export default QuizScreen;

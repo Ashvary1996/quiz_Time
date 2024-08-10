@@ -10,32 +10,25 @@ function WelcomScreen() {
   const [input, setInput] = useState("");
   const dispatch = useDispatch();
 
-  // const [name, setName] = useState("");
-  // const [selectedTags, setSelectedTags] = useState([]);
-
   const name = useSelector((state) => state.quiz.name);
   const selectedTags = useSelector((state) => state.quiz.selectedTags);
 
   const handleBegin = () => {
-    if (!input) toast.error("Name is required");
-    else if (selectedTags.length < 10) toast.warn("Add at least 10 tags");
+    if (!input) toast.error("Name is required", { pauseOnFocusLoss: false });
+    else if (selectedTags.length < 10)
+      toast.warn("Add at least 10 tags", { pauseOnFocusLoss: false });
     else if (selectedTags.length > 20)
-      toast.error("You can add only up to 20 tags");
+      toast.error("You can add only up to 20 tags",{pauseOnFocusLoss: false});
     else {
       dispatch(setName(input));
-      navigate("beginQuiz", {
-        state: {
-          name,
-          selectedTags,
-        },
-      });
+      navigate("beginQuiz");
     }
   };
 
   const handleTag = (tag) => {
     if (selectedTags.length >= 20) toast.warn("You can add only up to 20 tags");
     else if (selectedTags.includes(tag)) {
-      toast.info(`${tag} already added`);
+      toast.info(`${tag} already added`,{pauseOnFocusLoss: false});
     } else {
       dispatch(setSelectedTags([...selectedTags, tag]));
     }

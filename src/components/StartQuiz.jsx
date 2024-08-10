@@ -1,19 +1,11 @@
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function BeginQuiz() {
-  const location = useLocation();
-  const { name, selectedTags } = location.state;
+function StartQuiz() {
   const navigate = useNavigate();
-  // console.log(data);
+
   const handelClick = () => {
-    console.log("Test started");
-    navigate("/testScreen", {
-      state: {
-        name,
-        selectedTags,
-      },
-    });
+    navigate("/testScreen");
   };
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -57,4 +49,4 @@ function BeginQuiz() {
   );
 }
 
-export default BeginQuiz;
+export default StartQuiz;

@@ -1,8 +1,19 @@
+ 
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   name: "",
-  selectedTags: [],
+  selectedTags: [ "JavaScript",
+    "React",
+    "Angular",
+    "Vue.js",
+    "Svelte",
+    "Frontend",
+    "Backend",
+    "API",
+    "Testing",
+    "Postman",
+    "Insomnia",],
   filteredQuestions: [],
   score: 0,
   currentQuestionIndex: 0,
