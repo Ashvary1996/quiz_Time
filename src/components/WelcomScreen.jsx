@@ -2,26 +2,34 @@ import React, { useState } from "react";
 import { uniqueTags as tags } from "../data/tags";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setName, setSelectedTags } from "../redux/quizeSlice";
 
 function WelcomScreen() {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [selectedTags, setSelectedTags] = useState([]);
-  // console.log(name);
-  // console.log(selectedTags);
+  const [input, setInput] = useState("");
+  const dispatch = useDispatch();
+
+  // const [name, setName] = useState("");
+  // const [selectedTags, setSelectedTags] = useState([]);
+
+  const name = useSelector((state) => state.quiz.name);
+  const selectedTags = useSelector((state) => state.quiz.selectedTags);
 
   const handleBegin = () => {
-    if (!name) toast.error("Name is required");
-    else if (selectedTags.length < 10) toast.error("Add at least 10 tags");
+    if (!input) toast.error("Name is required");
+    else if (selectedTags.length < 10) toast.warn("Add at least 10 tags");
     else if (selectedTags.length > 20)
       toast.error("You can add only up to 20 tags");
-    else
+    else {
+      dispatch(setName(input));
       navigate("beginQuiz", {
         state: {
           name,
           selectedTags,
         },
       });
+    }
   };
 
   const handleTag = (tag) => {
@@ -29,13 +37,13 @@ function WelcomScreen() {
     else if (selectedTags.includes(tag)) {
       toast.info(`${tag} already added`);
     } else {
-      setSelectedTags((prevTags) => [...prevTags, tag]);
+      dispatch(setSelectedTags([...selectedTags, tag]));
     }
   };
 
   const handleSelectedTag = (tag) => {
     const updatedTags = selectedTags.filter((elem) => elem !== tag);
-    setSelectedTags(updatedTags);
+    dispatch(setSelectedTags(updatedTags));
   };
 
   return (
@@ -48,8 +56,9 @@ function WelcomScreen() {
 
       <div className="mb-6 w-full max-w-sm">
         <input
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setInput(e.target.value)}
           type="text"
+          value={input || name}
           placeholder="Enter your name"
           className="w-full p-3 border rounded shadow-sm "
         />
