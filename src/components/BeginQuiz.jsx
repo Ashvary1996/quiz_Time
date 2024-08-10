@@ -3,17 +3,22 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 function BeginQuiz() {
   const location = useLocation();
-  const data = location.state;
+  const { name, selectedTags } = location.state;
   const navigate = useNavigate();
-  console.log(data);
+  // console.log(data);
   const handelClick = () => {
     console.log("Test started");
-    navigate("/testScreen");
+    navigate("/testScreen", {
+      state: {
+        name,
+        selectedTags,
+      },
+    });
   };
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold text-center text-blue-600 mb-4">
-        Quiz Time
+        Read Carefully
       </h2>
       <p className="text-center text-gray-700 mb-8">
         Each question has a 30-second timer

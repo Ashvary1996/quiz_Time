@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { uniqueTags as tags } from "../data/tags";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import "react-toastify/dist/ReactToastify.css";
 
 function WelcomScreen() {
   const navigate = useNavigate();
@@ -56,39 +55,41 @@ function WelcomScreen() {
         />
         <button
           onClick={handleBegin}
-          className="mt-4 w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+          className="mt-4 w-full bg-teal-500 text-white py-2 px-4 rounded hover:bg-teal-600 transition"
         >
-          Begin
+          Enter
         </button>
       </div>
 
       <div className="w-full max-w-lg">
         <h2 className="text-xl font-semibold mb-4 text-center">
-          Select Multiple Tags to Begin the Quiz (min Required: 10)
+          Select Multiple Tags to start the Quiz.
         </h2>
 
-        <fieldset className="mb-4 border-2 border-teal-500 p-4   rounded">
-          <legend className="text-left text-lg font-medium">
-            Selected Tags: {selectedTags.length}
-          </legend>
-          <div className="flex flex-wrap gap-2">
-            {selectedTags.map((tag, i) => (
-              <div key={i} className="flex items-center">
-                <span className="px-3 py-1 bg-green-500 text-white rounded-full">
-                  {tag}
-                </span>
-                <button
-                  className="ml-2 text-red-500 hover:text-red-600 transition"
-                  onClick={() => handleSelectedTag(tag)}
-                >
-                  &times;
-                </button>
-              </div>
-            ))}
-          </div>
-        </fieldset>
+        {selectedTags.length > 0 ? (
+          <fieldset className="mb-4 border-2 border-teal-500 p-4   rounded">
+            <legend className="text-left text-lg font-medium">
+              Selected Tags: {selectedTags.length}
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {selectedTags.map((tag, i) => (
+                <div key={i} className="flex items-center">
+                  <span className="px-3 py-1 bg-green-500 text-white rounded-full hover:bg-green-600">
+                    {tag}
+                  </span>
+                  <button
+                    className="ml-2 text-red-500 hover:text-red-600 transition"
+                    onClick={() => handleSelectedTag(tag)}
+                  >
+                    &times;
+                  </button>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 border-2 p-2">
           {tags.map((tag, i) => (
             <button
               key={i}
