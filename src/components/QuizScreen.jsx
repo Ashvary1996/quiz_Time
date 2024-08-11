@@ -34,9 +34,7 @@ function QuizScreen() {
 
   useEffect(() => {
     if (timer === 0) {
-      if (currentQuestionIndex < filteredQuestions.length - 1) {
-        handleNextQuestion();
-      }
+      handleNextQuestion();
     } else {
       const countdown = setTimeout(
         () => setTimer((prevTime) => prevTime - 1),
@@ -46,7 +44,7 @@ function QuizScreen() {
         clearTimeout(countdown);
       };
     }
-  }, [timer, currentQuestionIndex, filteredQuestions.length]);
+  }, [timer]);
 
   let currentQuestion = filteredQuestions[currentQuestionIndex];
 
@@ -99,13 +97,13 @@ function QuizScreen() {
     setSelectedAnswers((prev) => [...prev, selectedOptions]);
     const questionScore = calculateScore();
     dispatch(setScore(questionScore));
+
     if (currentQuestionIndex < filteredQuestions.length - 1) {
       dispatch(setCurrentQuestionIndex(currentQuestionIndex + 1));
       dispatch(setSelectedOptions([]));
       setTimer(30);
-    } 
-    if (currentQuestionIndex + 1 === 10 && timer === 0) {
-      currentQuestion = "";
+    } else {
+      setShowFullResult(false);
     }
   };
 
@@ -149,12 +147,12 @@ function QuizScreen() {
                 </li>
               ))}
             </ul>
-            <button
+            {/* <button
               onClick={handleNextQuestion}
               className="mt-4 bg-teal-500 text-white p-2 rounded"
             >
               Next
-            </button>
+            </button> */}
           </div>
         ) : (
           <div className="text-lg font-medium mt-4">
@@ -183,7 +181,7 @@ function QuizScreen() {
                       {question.correct.join(", ")}
                     </p>
                     <p>
-                      <span className="font-semibold">Your Answer:</span>{" "}
+                      <span className="font-semibold">Your Answer:</span>
                       {selectedAnswers[index]?.join(", ") ||
                         "No answer selected"}
                     </p>
